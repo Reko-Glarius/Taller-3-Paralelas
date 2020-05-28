@@ -6,6 +6,8 @@
 
 using namespace std;
 
+///Funcion para ordenar el arreglo; esto se hace para poder aplicar de mejor manera los calculos necesarios para obtener los
+///valores requeridos
 void ordenar(int arreglo[])
 {
     int j,k, l;
@@ -18,56 +20,62 @@ void ordenar(int arreglo[])
                 l=arreglo[j];
                 arreglo[j]=arreglo[k];
                 arreglo[k]=l;
-                printf("%i", l);
             }
         }
     }
 }
 
+///Funcion para calcular la moda de una de las columnas.
+///Para esto se van contando la cantidad de veces que un numero aparece, cuando uno supera la cantidad maxima registrada, se
+///procede a registrar el numero, y reiniciar el contador
 int moda(int arreglo[])
 {
     int contador=1, contadorf=0, numero=0;
     for(int i=1; i<5015750; i++)
     {
-        if(arreglo[i]==arreglo[i-1])
+        if(arreglo[i]==arreglo[i-1]) ///Se revisa si sigue siendo el mismo numero
         {
-            contador++;
+            contador++; ///De ser el caso, el contador aumenta
         }
-        else
+        else ///En el caso contrario
         {
-            if(contador>contadorf)
+            if(contador>contadorf) ///Se revisa si el contador es mas grande que el maximo registrado actualemnte, de serlo
             {
-                contadorf=contador;
-                contador=1;
-                numero=arreglo[i-1];
+                contadorf=contador;  ///Se cambia la cantidad maxima registrado
+                contador=1;          ///y el contador se reinicia
+                numero=arreglo[i-1]; ///y finalmente se registra el valor mas repetido
             }
         }
     }
-    return numero;
+    return numero; ///Se retorna el valor resultante
 }
 
+///Funcion para calcular la desviacion estandar de una de las columnas.
+///Esta es la sumatoria de todos los valores restandole el promedio, luego elevado al cuadrado; luego es restado por la
+///cantidad todal de numeros menos 1. y a ese valor, le aplicamos unaraiz cuadrada
 int desviacion(int arreglo[], int promedio)
 {
     int operacion=0, sumatoria=0;
     for(int i=0; i<5015750; i++)
     {
-        operacion=arreglo[i]-promedio;
-        sumatoria+=(operacion*operacion);
+        operacion=arreglo[i]-promedio;    ///Resta de valor y promedio
+        sumatoria+=(operacion*operacion); ///al cuadrado
         operacion=0;
     }
-    operacion=sumatoria/5015749;
-    operacion=sqrt(operacion);
-    return operacion;
+    operacion=sumatoria/5015749; ///Resta de N-1
+    operacion=sqrt(operacion);   ///Aplicacion de la raiz cuadrada
+    return operacion; ///Retorno valor resultante
 }
 
+///Funcion para mostrar toda la informacion de una de las columnas
 void mostrar(int promedio, int moda, int mediana, int desviacion_estandar, string columna)
 {
-    cout<<"------------------------------------------------------------------"<<endl;
-    cout<<"Columna: "<<columna<<endl;
-    cout<<"Promedio: "<<promedio<<endl;
-    cout<<"Moda: "<<moda<<endl;
-    cout<<"Mediana: "<<mediana<<endl;
-    cout<<"Desv. Estandar: "<<desviacion_estandar<<endl;
+    cout<<"------------------------------------------------------------------"<<endl; ///Separador
+    cout<<"Columna: "<<columna<<endl;    //Nombre de la columna mostrada
+    cout<<"Promedio: "<<promedio<<endl;  //Promedio de la columna seleccionada
+    cout<<"Moda: "<<moda<<endl;          //Moda de la columna seleccionada
+    cout<<"Mediana: "<<mediana<<endl;    //Mediana de la columna selecionada
+    cout<<"Desv. Estandar: "<<desviacion_estandar<<endl;  ///Desviacion estandar de la columna seleccionada
 }
 
 int main(int argc, char *argv[])
@@ -91,13 +99,13 @@ int main(int argc, char *argv[])
         cout<<"Archivo ingresado de manera erronea, recuerde que debe enviarse con doble '\' para reconocer la direccion"<<endl;
         exit(1);
     }
-
-    int* dnem=new int[5015750];
-    int* dranking=new int[5015750];
-    int* dlenguaje=new int[5015750];
-    int* dmatematicas=new int[5015750];
-    int* dciencias=new int[5015750];
-    int* dhistoria=new int[5015750];
+    ///Se crean arreglos dinamicos para cada columna del archivo
+    int* dnem=new int[5015750];          ///Arreglo dinamico de "NEM"
+    int* dranking=new int[5015750];      ///Arreglo dinamico de "RANKING"
+    int* dlenguaje=new int[5015750];     ///Arreglo dinamico de "LENGUAJE"
+    int* dmatematicas=new int[5015750];  ///Arreglo dinamico de "MATEMATICAS"
+    int* dciencias=new int[5015750];     ///Arreglo dinamico de "CIENCIAS"
+    int* dhistoria=new int[5015750];     ///Arreglo dinamico de "HISTORIA"
 
     while(!archivo.eof()) ///Ciclo while con funcion propia de los archivos; la funcion detecta si termino el archivo o no; el while permite sacar linea por linea hasta llegar al final del documento
     {
@@ -117,15 +125,17 @@ int main(int argc, char *argv[])
         std::istringstream(lenguaje) >> lenguajen;
         std::istringstream(ciencias) >> cienciasn;
         std::istringstream(historia) >> historian;
-
+        
+        ///Se añade el respectivo valor de una de las columnas a su respectiva posicion en su respectivo arreglo
         dnem[i]=nemn;
         dranking[i]=rankingn;
         dlenguaje[i]=lenguajen;
         dmatematicas[i]=matematicasn;
         dciencias[i]=cienciasn;
         dhistoria[i]=historian;
-        i++;
+        i++; ///Variable para ir cambiando de posicion los arreglos
 
+        ///Se va realizando una sumatoria de cada valor de cada columna, esto para psteriormente calcular el promedio
         pnem+=nemn;
         pranking+=rankingn;
         pmatematicas+=matematicasn;
@@ -133,6 +143,8 @@ int main(int argc, char *argv[])
         pciencias+=cienciasn;
         phistoria+=historian;
     }
+    
+    ///Se procede a dividir las sumatorias por el total de valores, para obtener los promedios
     pnem=pnem/5015750;
     pranking=pranking/5015750;
     plenguaje=plenguaje/5015750;
@@ -140,42 +152,46 @@ int main(int argc, char *argv[])
     pciencias=pciencias/5015750;
     phistoria=phistoria/5015750;
 
+    ///Se utilia la funcion "ordenar" para ordenar de manera ascendente los vaores del cada arreglo.
+    ///ya con el arreglo ordenado, es posible obtener la moda, desviacion estandar y mediana mediante las respectivas funciones
+    ///En el caso de la mediana, como la cantidad de datos es par, se toman los 2 en el medio, se suman entre ellos y se divide en 2
     ordenar(dnem);
     monem=moda(dnem);
     desnem=desviacion(dnem, pnem);
-    mnem=dnem[2507874];
-    delete[] dnem;
+    mnem=(dnem[2507874]+dnem[2507875])/2;
+    delete[] dnem; ///Se elimina el arreglo para "NEM", para liberar memoria
 
     ordenar(dranking);
     moranking=moda(dranking);
     desranking=desviacion(dranking, pranking);
-    mranking=dranking[2507875];
-    delete[] dranking;
+    mranking=(dranking[2507875]+dranking[2507875])/2;
+    delete[] dranking; ///Se elimina el arreglo para "RANKING", para liberar memoria
 
     ordenar(dlenguaje);
     molenguaje=moda(dlenguaje);
     deslenguaje=desviacion(dlenguaje, plenguaje);
-    mlenguaje=dlenguaje[2507875];
-    delete[] dlenguaje;
+    mlenguaje=(dlenguaje[2507875]+dlenguaje[2507875])/2;
+    delete[] dlenguaje; ///Se elimina el arreglo para "LENGUAJE", para liberar memoria
 
     ordenar(dmatematicas);
     momatematicas=moda(dmatematicas);
     desmatematicas=desviacion(dmatematicas, pmatematicas);
-    mmatematicas=dmatematicas[2507875];
-    delete[] dmatematicas;
+    mmatematicas=(dmatematicas[2507875]+dmatematicas[2507875])/2;
+    delete[] dmatematicas; ///Se elimina el arreglo para "MATEMATICAS", para liberar memoria
 
     ordenar(dciencias);
     mociencias=moda(dciencias);
     desciencias=desviacion(dciencias, pciencias);
-    mciencias=dciencias[2507875];
-    delete[] dciencias;
+    mciencias=(dciencias[2507875]+dciencias[2507875])/2;
+    delete[] dciencias; ///Se elimina el arreglo para "CIENCIAS", para liberar memoria
 
     ordenar(dhistoria);
     mohistoria=moda(dhistoria);
     deshistoria=desviacion(dhistoria, phistoria);
-    mhistoria=dhistoria[2507875];
-    delete[] dhistoria;
+    mhistoria=(dhistoria[2507875]+dhistoria[2507875])/2;
+    delete[] dhistoria; ///Se elimina el arreglo para "HISTORIA", para liberar memoria
 
+    ///Se procede a mostrar toda la informacion de cada columna
     mostrar(pnem,monem,mnem,desnem,"NEM");
     mostrar(pranking,moranking,mranking,desranking,"RANKING");
     mostrar(plenguaje,molenguaje,mlenguaje,deslenguaje,"LENGUAJE");
@@ -183,6 +199,7 @@ int main(int argc, char *argv[])
     mostrar(pciencias,mociencias,mciencias,desciencias,"CIENCIAS");
     mostrar(phistoria,mohistoria,mhistoria,deshistoria,"HISTORIA");
 
+    ///Se finaliza mostrando a los integrantes del grupo desarrollador
     cout<<"------------------------------------------------------------------"<<endl;
     cout<<"Integrantes"<<endl;
     cout<<"Ricardo Aliste"<<endl;
