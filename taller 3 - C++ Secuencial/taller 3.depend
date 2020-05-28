@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1590678453 source:c:\users\usuario\desktop\taller 3\main.cpp
+	<iostream>
+	<fstream>
+	<sstream>
+	<string>
+	<cmath>
+
