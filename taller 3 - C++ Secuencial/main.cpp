@@ -6,82 +6,208 @@
 
 using namespace std;
 
-///Funcion para ordenar el arreglo; esto se hace para poder aplicar de mejor manera los calculos necesarios para obtener los
-///valores requeridos
-void ordenar(int arreglo[])
+int mid(int matriz[3][5])
 {
-    int j,k, l;
-    for(j=0; j<5015750; j++)
+    int n=5015752/2, numero=0;
+    for(int i=0; i<5; i++)
     {
-        for(k=0; k<5015750; k++)
+        numero+=matriz[2][i];
+        if(numero>=n)
         {
-            if(arreglo[j]>arreglo[k])
-            {
-                l=arreglo[j];
-                arreglo[j]=arreglo[k];
-                arreglo[k]=l;
-            }
+            return i;
         }
+    }
+
+}
+
+int mayor(int matriz[3][5])
+{
+    int nposicion=0;
+    for(int i=0; i<5; i++)
+    {
+        if(matriz[2][i]>nposicion)
+        {
+            nposicion=i;
+        }
+    }
+    return nposicion;
+}
+
+void preparar(int matriz[3][5])
+{
+    int n=450;
+    for(int i=0; i<5; i++)
+    {
+        matriz[0][i]=n;
+        matriz[1][i]=n+59;
+        matriz[2][i]=0;
+        n=n+60;
     }
 }
 
-///Funcion para calcular la moda de una de las columnas.
-///Para esto se van contando la cantidad de veces que un numero aparece, cuando uno supera la cantidad maxima registrada, se
-///procede a registrar el numero, y reiniciar el contador
-int moda(int arreglo[])
+void posicionar(int matriz[3][5], int numero)
 {
-    int contador=1, contadorf=0, numero=0;
-    for(int i=1; i<5015750; i++)
+    if(matriz[1][0]>=numero && numero>=matriz[0][0])
     {
-        if(arreglo[i]==arreglo[i-1]) ///Se revisa si sigue siendo el mismo numero
-        {
-            contador++; ///De ser el caso, el contador aumenta
-        }
-        else ///En el caso contrario
-        {
-            if(contador>contadorf) ///Se revisa si el contador es mas grande que el maximo registrado actualemnte, de serlo
-            {
-                contadorf=contador;  ///Se cambia la cantidad maxima registrado
-                contador=1;          ///y el contador se reinicia
-                numero=arreglo[i-1]; ///y finalmente se registra el valor mas repetido
-            }
-        }
+        matriz[2][0]=matriz[2][0]+1;
     }
-    return numero; ///Se retorna el valor resultante
+    if(matriz[1][1]>=numero && numero>=matriz[0][1])
+    {
+        matriz[2][1]=matriz[2][1]+1;
+    }
+    if(matriz[1][2]>=numero && numero>=matriz[0][2])
+    {
+        matriz[2][2]=matriz[2][2]+1;
+    }
+    if(matriz[1][3]>=numero && numero>=matriz[0][3])
+    {
+        matriz[2][3]=matriz[2][3]+1;
+    }
+    if(750>=numero && numero>=matriz[0][4])
+    {
+        matriz[2][4]=matriz[2][4]+1;
+    }
 }
 
-///Funcion para calcular la desviacion estandar de una de las columnas.
-///Esta es la sumatoria de todos los valores restandole el promedio, luego elevado al cuadrado; luego es restado por la
-///cantidad todal de numeros menos 1. y a ese valor, le aplicamos unaraiz cuadrada
-int desviacion(int arreglo[], int promedio)
+int moda(int matriz[3][5])
 {
-    int operacion=0, sumatoria=0;
-    for(int i=0; i<5015750; i++)
+    int posicion=mayor(matriz);
+    int A=60, numero_resultante=0;
+    int f0,f1,f2,L;
+    if(posicion==0)
     {
-        operacion=arreglo[i]-promedio;    ///Resta de valor y promedio
-        sumatoria+=(operacion*operacion); ///al cuadrado
-        operacion=0;
+        f0=0;
+        f1=matriz[2][0];
+        f2=matriz[2][1];
+        L=matriz[0][0];
+        numero_resultante=((f1-f0)/((f1-f0)+(f1-f2)))*A;
+        numero_resultante=numero_resultante+L;
+        return numero_resultante;
     }
-    operacion=sumatoria/5015749; ///Resta de N-1
-    operacion=sqrt(operacion);   ///Aplicacion de la raiz cuadrada
-    return operacion; ///Retorno valor resultante
+    if(posicion==1)
+    {
+        f0=matriz[2][0];
+        f1=matriz[2][1];
+        f2=matriz[2][2];
+        L=matriz[0][1];
+        numero_resultante=((f1-f0)/((f1-f0)+(f1-f2)))*A;
+        numero_resultante=numero_resultante+L;
+        return numero_resultante;
+    }
+    if(posicion==2)
+    {
+        f0=matriz[2][1];
+        f1=matriz[2][2];
+        f2=matriz[2][3];
+        L=matriz[0][2];
+        numero_resultante=((f1-f0)/((f1-f0)+(f1-f2)))*A;
+        numero_resultante=numero_resultante+L;
+        return numero_resultante;
+    }
+    if(posicion==3)
+    {
+        f0=matriz[2][2];
+        f1=matriz[2][3];
+        f2=matriz[2][4];
+        L=matriz[0][3];
+        numero_resultante=((f1-f0)/((f1-f0)+(f1-f2)))*A;
+        numero_resultante=numero_resultante+L;
+        return numero_resultante;
+    }
+    if(posicion==4)
+    {
+        f0=matriz[2][3];
+        f1=matriz[2][4];
+        f2=0;
+        L=matriz[0][4];
+        numero_resultante=((f1-f0)/((f1-f0)+(f1-f2)))*A;
+        numero_resultante=numero_resultante+L;
+        return numero_resultante;
+    }
 }
 
-///Funcion para mostrar toda la informacion de una de las columnas
+int mediana(int matriz[3][5])
+{
+    int posicion=mid(matriz);
+    int A=60, numero_resultante=0, n=5015752/2;
+    int F,f,L;
+    if(posicion==0)
+    {
+        F=0;
+        f=matriz[2][0];
+        L=matriz[0][0];
+        numero_resultante=((n-F)/(f))*A;
+        numero_resultante=numero_resultante+L;
+        return numero_resultante;
+    }
+    if(posicion==1)
+    {
+        F=matriz[2][0];
+        f=matriz[2][1];
+        L=matriz[0][1];
+        numero_resultante=((n-F)/(f))*A;
+        numero_resultante=numero_resultante+L;
+        return numero_resultante;
+    }
+    if(posicion==2)
+    {
+        F=matriz[2][1]+matriz[2][0];
+        f=matriz[2][2];
+        L=matriz[0][2];
+        numero_resultante=((n-F)/(f))*A;
+        numero_resultante=numero_resultante+L;
+        return numero_resultante;
+    }
+    if(posicion==3)
+    {
+        F=matriz[2][2]+matriz[2][1]+matriz[2][0];
+        f=matriz[2][3];
+        L=matriz[0][3];
+        numero_resultante=((n-F)/(f))*A;
+        numero_resultante=numero_resultante+L;
+        return numero_resultante;
+    }
+    if(posicion==4)
+    {
+        F=matriz[2][3]+matriz[2][2]+matriz[2][1]+matriz[2][0];;
+        f=matriz[2][4];
+        L=matriz[0][4];
+        numero_resultante=((n-F)/(f))*A;
+        numero_resultante=numero_resultante+L;
+        return numero_resultante;
+    }
+}
+
+int desviacion(int matriz[3][5], int promedio)
+{
+    int sumatoria=0, numero;
+    int f, n;
+    for(int i=0; i<5; i++)
+    {
+        f=matriz[2][i];
+        n=(matriz[0][i])+30;
+        numero=(n-promedio)*(n-promedio);
+        sumatoria+=(f*numero);
+    }
+    sumatoria=sumatoria/5015751;
+    numero=sqrt(sumatoria);
+    return numero;
+}
+
 void mostrar(int promedio, int moda, int mediana, int desviacion_estandar, string columna)
 {
-    cout<<"------------------------------------------------------------------"<<endl; ///Separador
-    cout<<"Columna: "<<columna<<endl;    //Nombre de la columna mostrada
-    cout<<"Promedio: "<<promedio<<endl;  //Promedio de la columna seleccionada
-    cout<<"Moda: "<<moda<<endl;          //Moda de la columna seleccionada
-    cout<<"Mediana: "<<mediana<<endl;    //Mediana de la columna selecionada
-    cout<<"Desv. Estandar: "<<desviacion_estandar<<endl;  ///Desviacion estandar de la columna seleccionada
+    cout<<"------------------------------------------------------------------"<<endl;
+    cout<<"Columna: "<<columna<<endl;
+    cout<<"Promedio: "<<promedio<<endl;
+    cout<<"Moda: "<<moda<<endl;
+    cout<<"Mediana: "<<mediana<<endl;
+    cout<<"Desv. Estandar: "<<desviacion_estandar<<endl;
 }
 
 int main(int argc, char *argv[])
 {
     std::string rut,nem,ranking,matematicas,lenguaje,ciencias,historia; ///Variable tipo string; son utilizadas para guardar datos
-    int nemn,rankingn,matematicasn,lenguajen,cienciasn,historian,i; ///Variables tipo int; son para almacenar los datos unas vez pasados a entero
+    int nemn,rankingn,matematicasn,lenguajen,cienciasn,historian; ///Variables tipo int; son para almacenar los datos unas vez pasados a entero
     int pnem,pranking, pmatematicas, plenguaje, pciencias, phistoria;  //Promedio
     int monem,moranking,momatematicas,molenguaje,mociencias,mohistoria;  //Moda
     int desnem,desranking,desmatematicas,deslenguaje,desciencias,deshistoria; //Desviacion estandar
@@ -90,22 +216,33 @@ int main(int argc, char *argv[])
     if(argc==1) //If que verifica que se envio almenos un argumento; en caso de que no se enviase ningun, cierra el programa
     {
         cout<<"Error. Direccion del archivo no enviada\n\nCerrando APP por motivos de seguridad"<<endl;
-        exit(1); ///Funcion interna de C/C++; permite cerrar el programa si recibe un entero 1
+        //exit(1); ///Funcion interna de C/C++; permite cerrar el programa si recibe un entero 1
     }
 
-    ifstream archivo(argv[1]); ///Funcion para abrir el archivo de texto, en funcion de la direccion enviada por argumento
+    ifstream archivo("puntajes.csv"); ///Funcion para abrir el archivo de texto, en funcion de la direccion enviada por argumento
     if(!archivo.good()) ///Funcion de los archivos; permite reconocer si el archivo se abri de manera exitosa; el if es para que, en caso de no abrirse correctamente, se cierre el programa
     {
         cout<<"Archivo ingresado de manera erronea, recuerde que debe enviarse con doble '\' para reconocer la direccion"<<endl;
         exit(1);
     }
-    ///Se crean arreglos dinamicos para cada columna del archivo
-    int* dnem=new int[5015750];          ///Arreglo dinamico de "NEM"
-    int* dranking=new int[5015750];      ///Arreglo dinamico de "RANKING"
-    int* dlenguaje=new int[5015750];     ///Arreglo dinamico de "LENGUAJE"
-    int* dmatematicas=new int[5015750];  ///Arreglo dinamico de "MATEMATICAS"
-    int* dciencias=new int[5015750];     ///Arreglo dinamico de "CIENCIAS"
-    int* dhistoria=new int[5015750];     ///Arreglo dinamico de "HISTORIA"
+
+    int dnem[3][5];
+    preparar(dnem);
+
+    int dranking[3][5];
+    preparar(dranking);
+
+    int dlenguaje[3][5];
+    preparar(dlenguaje);
+
+    int dmatematicas[3][5];
+    preparar(dmatematicas);
+
+    int dciencias[3][5];
+    preparar(dciencias);
+
+    int dhistoria[3][5];
+    preparar(dhistoria);
 
     while(!archivo.eof()) ///Ciclo while con funcion propia de los archivos; la funcion detecta si termino el archivo o no; el while permite sacar linea por linea hasta llegar al final del documento
     {
@@ -125,17 +262,14 @@ int main(int argc, char *argv[])
         std::istringstream(lenguaje) >> lenguajen;
         std::istringstream(ciencias) >> cienciasn;
         std::istringstream(historia) >> historian;
-        
-        ///Se añade el respectivo valor de una de las columnas a su respectiva posicion en su respectivo arreglo
-        dnem[i]=nemn;
-        dranking[i]=rankingn;
-        dlenguaje[i]=lenguajen;
-        dmatematicas[i]=matematicasn;
-        dciencias[i]=cienciasn;
-        dhistoria[i]=historian;
-        i++; ///Variable para ir cambiando de posicion los arreglos
 
-        ///Se va realizando una sumatoria de cada valor de cada columna, esto para psteriormente calcular el promedio
+        posicionar(dnem, nemn);
+        posicionar(dranking, rankingn);
+        posicionar(dlenguaje, lenguajen);
+        posicionar(dmatematicas, matematicasn);
+        posicionar(dciencias, cienciasn);
+        posicionar(dhistoria, historian);
+
         pnem+=nemn;
         pranking+=rankingn;
         pmatematicas+=matematicasn;
@@ -143,55 +277,38 @@ int main(int argc, char *argv[])
         pciencias+=cienciasn;
         phistoria+=historian;
     }
-    
-    ///Se procede a dividir las sumatorias por el total de valores, para obtener los promedios
-    pnem=pnem/5015750;
-    pranking=pranking/5015750;
-    plenguaje=plenguaje/5015750;
-    pmatematicas=pmatematicas/5015750;
-    pciencias=pciencias/5015750;
-    phistoria=phistoria/5015750;
 
-    ///Se utilia la funcion "ordenar" para ordenar de manera ascendente los vaores del cada arreglo.
-    ///ya con el arreglo ordenado, es posible obtener la moda, desviacion estandar y mediana mediante las respectivas funciones
-    ///En el caso de la mediana, como la cantidad de datos es par, se toman los 2 en el medio, se suman entre ellos y se divide en 2
-    ordenar(dnem);
+    pnem=pnem/5015752;
+    pranking=pranking/5015752;
+    plenguaje=plenguaje/5015752;
+    pmatematicas=pmatematicas/5015752;
+    pciencias=pciencias/5015752;
+    phistoria=phistoria/5015752;
+
     monem=moda(dnem);
     desnem=desviacion(dnem, pnem);
-    mnem=(dnem[2507874]+dnem[2507875])/2;
-    delete[] dnem; ///Se elimina el arreglo para "NEM", para liberar memoria
+    mnem=mediana(dnem);
 
-    ordenar(dranking);
     moranking=moda(dranking);
     desranking=desviacion(dranking, pranking);
-    mranking=(dranking[2507875]+dranking[2507875])/2;
-    delete[] dranking; ///Se elimina el arreglo para "RANKING", para liberar memoria
+    mranking=mediana(dranking);
 
-    ordenar(dlenguaje);
     molenguaje=moda(dlenguaje);
     deslenguaje=desviacion(dlenguaje, plenguaje);
-    mlenguaje=(dlenguaje[2507875]+dlenguaje[2507875])/2;
-    delete[] dlenguaje; ///Se elimina el arreglo para "LENGUAJE", para liberar memoria
+    mlenguaje=mediana(dlenguaje);
 
-    ordenar(dmatematicas);
     momatematicas=moda(dmatematicas);
     desmatematicas=desviacion(dmatematicas, pmatematicas);
-    mmatematicas=(dmatematicas[2507875]+dmatematicas[2507875])/2;
-    delete[] dmatematicas; ///Se elimina el arreglo para "MATEMATICAS", para liberar memoria
+    mmatematicas=mediana(dmatematicas);
 
-    ordenar(dciencias);
     mociencias=moda(dciencias);
     desciencias=desviacion(dciencias, pciencias);
-    mciencias=(dciencias[2507875]+dciencias[2507875])/2;
-    delete[] dciencias; ///Se elimina el arreglo para "CIENCIAS", para liberar memoria
+    mciencias=mediana(dciencias);
 
-    ordenar(dhistoria);
     mohistoria=moda(dhistoria);
     deshistoria=desviacion(dhistoria, phistoria);
-    mhistoria=(dhistoria[2507875]+dhistoria[2507875])/2;
-    delete[] dhistoria; ///Se elimina el arreglo para "HISTORIA", para liberar memoria
+    mhistoria=mediana(dhistoria);
 
-    ///Se procede a mostrar toda la informacion de cada columna
     mostrar(pnem,monem,mnem,desnem,"NEM");
     mostrar(pranking,moranking,mranking,desranking,"RANKING");
     mostrar(plenguaje,molenguaje,mlenguaje,deslenguaje,"LENGUAJE");
@@ -199,11 +316,9 @@ int main(int argc, char *argv[])
     mostrar(pciencias,mociencias,mciencias,desciencias,"CIENCIAS");
     mostrar(phistoria,mohistoria,mhistoria,deshistoria,"HISTORIA");
 
-    ///Se finaliza mostrando a los integrantes del grupo desarrollador
     cout<<"------------------------------------------------------------------"<<endl;
     cout<<"Integrantes"<<endl;
     cout<<"Ricardo Aliste"<<endl;
     cout<<"Daniel Cajas"<<endl;
     cout<<"Rodrigo Carmona"<<endl;
-
 }
