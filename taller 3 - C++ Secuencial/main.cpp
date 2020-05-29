@@ -41,7 +41,7 @@ void preparar(int matriz[3][5])
         matriz[0][i]=n;
         matriz[1][i]=n+59;
         matriz[2][i]=0;
-        n=n+60;
+        n+=60;
     }
 }
 
@@ -67,6 +67,23 @@ void posicionar(int matriz[3][5], int numero)
     {
         matriz[2][4]=matriz[2][4]+1;
     }
+}
+
+int promedio(int matriz[3][5])
+{
+    int sumatoria=0;
+    int x, f;
+    for(int i=0; i<5; i++)
+    {
+        x=matriz[0][i]+30;
+
+        f=matriz[2][i];
+
+        sumatoria+=((x*f)/5015752);
+        printf("%i\n", sumatoria);
+
+    }
+    return sumatoria;
 }
 
 int moda(int matriz[3][5])
@@ -208,23 +225,10 @@ int main(int argc, char *argv[])
 {
     std::string rut,nem,ranking,matematicas,lenguaje,ciencias,historia; ///Variable tipo string; son utilizadas para guardar datos
     int nemn,rankingn,matematicasn,lenguajen,cienciasn,historian; ///Variables tipo int; son para almacenar los datos unas vez pasados a entero
-    int pnem,pranking, pmatematicas, plenguaje, pciencias, phistoria;  //Promedio
+    int pnem=0,pranking=0, pmatematicas=0, plenguaje=0, pciencias=0, phistoria=0, i=1;  //Promedio
     int monem,moranking,momatematicas,molenguaje,mociencias,mohistoria;  //Moda
     int desnem,desranking,desmatematicas,deslenguaje,desciencias,deshistoria; //Desviacion estandar
     int mnem,mranking,mmatematicas,mlenguaje,mciencias,mhistoria; ///Medianas
-
-    if(argc==1) //If que verifica que se envio almenos un argumento; en caso de que no se enviase ningun, cierra el programa
-    {
-        cout<<"Error. Direccion del archivo no enviada\n\nCerrando APP por motivos de seguridad"<<endl;
-        //exit(1); ///Funcion interna de C/C++; permite cerrar el programa si recibe un entero 1
-    }
-
-    ifstream archivo("puntajes.csv"); ///Funcion para abrir el archivo de texto, en funcion de la direccion enviada por argumento
-    if(!archivo.good()) ///Funcion de los archivos; permite reconocer si el archivo se abri de manera exitosa; el if es para que, en caso de no abrirse correctamente, se cierre el programa
-    {
-        cout<<"Archivo ingresado de manera erronea, recuerde que debe enviarse con doble '\' para reconocer la direccion"<<endl;
-        exit(1);
-    }
 
     int dnem[3][5];
     preparar(dnem);
@@ -243,6 +247,19 @@ int main(int argc, char *argv[])
 
     int dhistoria[3][5];
     preparar(dhistoria);
+
+    if(argc==1) //If que verifica que se envio almenos un argumento; en caso de que no se enviase ningun, cierra el programa
+    {
+        cout<<"Error. Direccion del archivo no enviada\n\nCerrando APP por motivos de seguridad"<<endl;
+        //exit(1); ///Funcion interna de C/C++; permite cerrar el programa si recibe un entero 1
+    }
+
+    ifstream archivo("puntajes.csv"); ///Funcion para abrir el archivo de texto, en funcion de la direccion enviada por argumento
+    if(!archivo.good()) ///Funcion de los archivos; permite reconocer si el archivo se abri de manera exitosa; el if es para que, en caso de no abrirse correctamente, se cierre el programa
+    {
+        cout<<"Archivo ingresado de manera erronea, recuerde que debe enviarse con doble '\' para reconocer la direccion"<<endl;
+        exit(1);
+    }
 
     while(!archivo.eof()) ///Ciclo while con funcion propia de los archivos; la funcion detecta si termino el archivo o no; el while permite sacar linea por linea hasta llegar al final del documento
     {
@@ -270,20 +287,14 @@ int main(int argc, char *argv[])
         posicionar(dciencias, cienciasn);
         posicionar(dhistoria, historian);
 
-        pnem+=nemn;
-        pranking+=rankingn;
-        pmatematicas+=matematicasn;
-        plenguaje+=lenguajen;
-        pciencias+=cienciasn;
-        phistoria+=historian;
     }
 
-    pnem=pnem/5015752;
-    pranking=pranking/5015752;
-    plenguaje=plenguaje/5015752;
-    pmatematicas=pmatematicas/5015752;
-    pciencias=pciencias/5015752;
-    phistoria=phistoria/5015752;
+    pnem=promedio(dnem);
+    pranking=promedio(dranking);
+    plenguaje=promedio(dlenguaje);
+    pmatematicas=promedio(dmatematicas);
+    pciencias=promedio(dciencias);
+    phistoria=promedio(dhistoria);
 
     monem=moda(dnem);
     desnem=desviacion(dnem, pnem);
