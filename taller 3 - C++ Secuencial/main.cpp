@@ -76,12 +76,8 @@ int promedio(int matriz[3][5])
     for(int i=0; i<5; i++)
     {
         x=matriz[0][i]+30;
-
         f=matriz[2][i];
-
         sumatoria+=((x*f)/5015752);
-        printf("%i\n", sumatoria);
-
     }
     return sumatoria;
 }
@@ -199,14 +195,15 @@ int desviacion(int matriz[3][5], int promedio)
 {
     int sumatoria=0, numero;
     int f, n;
+    sumatoria=0;
     for(int i=0; i<5; i++)
     {
         f=matriz[2][i];
         n=(matriz[0][i])+30;
-        numero=(n-promedio)*(n-promedio);
-        sumatoria+=(f*numero);
+        numero=pow(n-promedio, 2);
+        sumatoria+=((f*numero)/5015751);
     }
-    sumatoria=sumatoria/5015751;
+    printf("\n");
     numero=sqrt(sumatoria);
     return numero;
 }
@@ -251,10 +248,10 @@ int main(int argc, char *argv[])
     if(argc==1) //If que verifica que se envio almenos un argumento; en caso de que no se enviase ningun, cierra el programa
     {
         cout<<"Error. Direccion del archivo no enviada\n\nCerrando APP por motivos de seguridad"<<endl;
-        //exit(1); ///Funcion interna de C/C++; permite cerrar el programa si recibe un entero 1
+        exit(1); ///Funcion interna de C/C++; permite cerrar el programa si recibe un entero 1
     }
 
-    ifstream archivo("puntajes.csv"); ///Funcion para abrir el archivo de texto, en funcion de la direccion enviada por argumento
+    ifstream archivo(argv[1]); ///Funcion para abrir el archivo de texto, en funcion de la direccion enviada por argumento
     if(!archivo.good()) ///Funcion de los archivos; permite reconocer si el archivo se abri de manera exitosa; el if es para que, en caso de no abrirse correctamente, se cierre el programa
     {
         cout<<"Archivo ingresado de manera erronea, recuerde que debe enviarse con doble '\' para reconocer la direccion"<<endl;
