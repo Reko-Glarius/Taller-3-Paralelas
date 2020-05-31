@@ -96,8 +96,7 @@ int main(int argc, char **argv)
         std::vector<int> dciencias;
         std::vector<int> dhistoria;
         if (entrada)
-        {
-#pragma omp parallel for
+        { 
             {
                 for (std::string linea; getline(entrada, linea);)
                 {
