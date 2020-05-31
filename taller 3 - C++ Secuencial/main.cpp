@@ -89,13 +89,13 @@ int moda(int matriz[3][5]) ///Funcion para calcular la moda de una tabla de dato
     int f0,f1,f2,L;  ///Variables a utilizar para calcular la moda
     if(posicion==0) ///Para el intervalo 1
     {
-        f0=0;            ///Cantidad de datos en la posicion
-        f1=matriz[2][0];
-        f2=matriz[2][1];
-        L=matriz[0][0];
-        numero_resultante=((f1-f0)/((f1-f0)+(f1-f2)))*A;
-        numero_resultante=numero_resultante+L;
-        return numero_resultante;
+        f0=0;            ///Cantidad de datos en el rango anteriro
+        f1=matriz[2][0]; ///Cantidad de datos en el rango actual
+        f2=matriz[2][1]; ///Cantidad de datos en el rango Siguiente
+        L=matriz[0][0];  ///Limite inferior del actual rango de datos
+        numero_resultante=((f1-f0)/((f1-f0)+(f1-f2)))*A; ///Se calcula la diferencia entre la cantidad de datos y la cant. actual; luego de multiplica por la amplitud
+        numero_resultante=numero_resultante+L; ///Luego del calculo anterior, se le suma el limite inferior del rango actual
+        return numero_resultante;  ///Finalmente se retorna el valor resultante; estas operaciones se realizan para cada caso
     }
     if(posicion==1) ///Para el intervalo 2
     {
@@ -141,17 +141,17 @@ int moda(int matriz[3][5]) ///Funcion para calcular la moda de una tabla de dato
 
 int mediana(int matriz[3][5])
 {
-    int posicion=mid(matriz);
-    int A=60, numero_resultante=0, n=5015752/2;
-    int F,f,L;
+    int posicion=mid(matriz); ///Se obtiene la posicion en la cual se encuentra la mitad del total de datos
+    int A=60, numero_resultante=0, n=5015752/2; ///A es la amplitud, n es la mitad de la cantidad total de datos
+    int F,f,L; ///Variables para el calculo
     if(posicion==0) ///Para el intervalo 1
     {
-        F=0;
-        f=matriz[2][0];
-        L=matriz[0][0];
-        numero_resultante=((n-F)/(f))*A;
-        numero_resultante=numero_resultante+L;
-        return numero_resultante;
+        F=0;            ///Cantidad de datos en el rango anteriro
+        f=matriz[2][0]; ///Cantidad de datos en el rango actual
+        L=matriz[0][0]; ///Limite inferior de datos en el rango actual
+        numero_resultante=((n-F)/(f))*A;       ///Luego se calcula la diferencia entre n y F; luego se divide por f; y se mult. por A
+        numero_resultante=numero_resultante+L; ///Luego se le suma el limite inferior del rango actual
+        return numero_resultante; ///Finalmente se retorna el valor resultante; estas operaciones se realizan para cada caso
     }
     if(posicion==1) ///Para el intervalo 2
     {
@@ -191,54 +191,54 @@ int mediana(int matriz[3][5])
     }
 }
 
-int desviacion(int matriz[3][5], int promedio) {
-    unsigned long long sumatoria = 0, numero = 0;
+int desviacion(int matriz[3][5], int promedio) {  ///Funcion para calcular la desviacion estandar
+    unsigned long long sumatoria = 0, numero = 0; ///Variables para la calculacion de la formula
     for (int i=0; i<5; i++)
     {
-        int f=matriz[2][i];
-        int n=(matriz[0][i])+30;
-        numero=(unsigned long long)pow((n-promedio), 2);
-        unsigned long long valor=(f*numero);
-        sumatoria+=valor;
+        int f=matriz[2][i];      ///Cantidad de datos del rango actual de datos
+        int n=(matriz[0][i])+30; ///Marca de clase del rango actual de datos
+        numero=(unsigned long long)pow((n-promedio), 2); ///se calcula la diferencia entre f y el promedio de la tabla de datos, y se eleva al cuadrado el resultado
+        unsigned long long valor=(f*numero); ///Luego se multiplica por f
+        sumatoria+=valor; ///Este valor resultante se van sumando entre si contantemente
     }
-    return (int)sqrt(sumatoria/ 5015751);
+    return (int)sqrt(sumatoria/ 5015751); ///Y finalmente se regresa el resultado de aplicarle una raiz cuadrada a la division de la sumatoria con el total de datos
 }
 
-void mostrar(int promedio, int moda, int mediana, int desviacion_estandar, string columna)
+void mostrar(int promedio, int moda, int mediana, int desviacion_estandar, string columna) ///Funcion para mostrar todos los datos de cada columnda
 {
     cout<<"------------------------------------------------------------------"<<endl;
-    cout<<"Columna: "<<columna<<endl;
-    cout<<"Promedio: "<<promedio<<endl;
-    cout<<"Moda: "<<moda<<endl;
-    cout<<"Mediana: "<<mediana<<endl;
-    cout<<"Desv. Estandar: "<<desviacion_estandar<<endl;
+    cout<<"Columna: "<<columna<<endl;   ///Nombre de la columna (ejemplo: NEM)
+    cout<<"Promedio: "<<promedio<<endl; ///Promedio de la columna
+    cout<<"Moda: "<<moda<<endl;         ///Moda de la columna
+    cout<<"Mediana: "<<mediana<<endl;   ///Mediana de la columna
+    cout<<"Desv. Estandar: "<<desviacion_estandar<<endl; ///Desviacion estandar de la columna
 }
 
 int main(int argc, char *argv[])
 {
     std::string rut,nem,ranking,matematicas,lenguaje,ciencias,historia; ///Variable tipo string; son utilizadas para guardar datos
     int nemn,rankingn,matematicasn,lenguajen,cienciasn,historian; ///Variables tipo int; son para almacenar los datos unas vez pasados a entero
-    int pnem=0,pranking=0, pmatematicas=0, plenguaje=0, pciencias=0, phistoria=0, i=1;  //Promedio
-    int monem,moranking,momatematicas,molenguaje,mociencias,mohistoria;  //Moda
-    int desnem,desranking,desmatematicas,deslenguaje,desciencias,deshistoria; //Desviacion estandar
-    int mnem,mranking,mmatematicas,mlenguaje,mciencias,mhistoria; ///Medianas
+    int pnem=0,pranking=0, pmatematicas=0, plenguaje=0, pciencias=0, phistoria=0, i=1;  //Variables para almacenar los promedios
+    int monem,moranking,momatematicas,molenguaje,mociencias,mohistoria;  //Variables para almacenar las moda
+    int desnem,desranking,desmatematicas,deslenguaje,desciencias,deshistoria; //Variables para almacenar la desviacion estandar
+    int mnem,mranking,mmatematicas,mlenguaje,mciencias,mhistoria; ///Variables para almacenar las medianas
 
-    int dnem[3][5];
-    preparar(dnem);
+    int dnem[3][5]; ///Tabla de datos de NEM
+    preparar(dnem); ///Se inicializa la tabla de datos (esta accion se repite para cada tabla)
 
-    int dranking[3][5];
+    int dranking[3][5]; ///Tabla de datos de Ranking
     preparar(dranking);
 
-    int dlenguaje[3][5];
+    int dlenguaje[3][5]; ///Tabla de datos de Lenguaje
     preparar(dlenguaje);
 
-    int dmatematicas[3][5];
+    int dmatematicas[3][5]; ///Tabla de datos de Matematicas
     preparar(dmatematicas);
 
-    int dciencias[3][5];
+    int dciencias[3][5]; ///Tabla de datos de Ciencias
     preparar(dciencias);
 
-    int dhistoria[3][5];
+    int dhistoria[3][5]; ///Tabla de datos de Historia
     preparar(dhistoria);
 
     if(argc==1) //If que verifica que se envio almenos un argumento; en caso de que no se enviase ningun, cierra el programa
@@ -272,7 +272,8 @@ int main(int argc, char *argv[])
         std::istringstream(lenguaje) >> lenguajen;
         std::istringstream(ciencias) >> cienciasn;
         std::istringstream(historia) >> historian;
-
+        
+        ///Se almacena cada datos numerico en la posicion que le corresponde dentro de su respectiva tabla de datos
         posicionar(dnem, nemn);
         posicionar(dranking, rankingn);
         posicionar(dlenguaje, lenguajen);
@@ -281,46 +282,56 @@ int main(int argc, char *argv[])
         posicionar(dhistoria, historian);
 
     }
-
+    
+    //Se realiza el calculo de los promedios
     pnem=promedio(dnem);
     pranking=promedio(dranking);
     plenguaje=promedio(dlenguaje);
     pmatematicas=promedio(dmatematicas);
     pciencias=promedio(dciencias);
     phistoria=promedio(dhistoria);
+    
+    ///Se realiza el calculo de los datos de cada columna (se realiza en cada ocasion en el mismo orden)
+    ///Nem
+    monem=moda(dnem);              ///Moda
+    desnem=desviacion(dnem, pnem); ///Desv. Estandar
+    mnem=mediana(dnem);            ///Mediana
 
-    monem=moda(dnem);
-    desnem=desviacion(dnem, pnem);
-    mnem=mediana(dnem);
-
+    ///Ranking
     moranking=moda(dranking);
-    desranking=desviacion(dranking, pranking);
-    mranking=mediana(dranking);
+    desranking=desviacion(dranking, pranking); 
+    mranking=mediana(dranking);                
 
+    ///Lenguaje
     molenguaje=moda(dlenguaje);
     deslenguaje=desviacion(dlenguaje, plenguaje);
     mlenguaje=mediana(dlenguaje);
 
+    ///Matemaicas
     momatematicas=moda(dmatematicas);
     desmatematicas=desviacion(dmatematicas, pmatematicas);
     mmatematicas=mediana(dmatematicas);
 
+    ///Ciencias
     mociencias=moda(dciencias);
     desciencias=desviacion(dciencias, pciencias);
     mciencias=mediana(dciencias);
 
+    ///Historia
     mohistoria=moda(dhistoria);
     deshistoria=desviacion(dhistoria, phistoria);
     mhistoria=mediana(dhistoria);
 
-    mostrar(pnem,monem,mnem,desnem,"NEM");
-    mostrar(pranking,moranking,mranking,desranking,"RANKING");
-    mostrar(plenguaje,molenguaje,mlenguaje,deslenguaje,"LENGUAJE");
-    mostrar(pmatematicas,momatematicas,mmatematicas,desmatematicas,"MATEMATICAS");
-    mostrar(pciencias,mociencias,mciencias,desciencias,"CIENCIAS");
-    mostrar(phistoria,mohistoria,mhistoria,deshistoria,"HISTORIA");
+    ///Se procede a mostrar la informacion de cada columna
+    mostrar(pnem,monem,mnem,desnem,"NEM");                                         ///NEM
+    mostrar(pranking,moranking,mranking,desranking,"RANKING");                     ///RANKING
+    mostrar(plenguaje,molenguaje,mlenguaje,deslenguaje,"LENGUAJE");                ///LENGUAJE
+    mostrar(pmatematicas,momatematicas,mmatematicas,desmatematicas,"MATEMATICAS"); ///MATEMATICAS
+    mostrar(pciencias,mociencias,mciencias,desciencias,"CIENCIAS");                ///CIENCIAS
+    mostrar(phistoria,mohistoria,mhistoria,deshistoria,"HISTORIA");                ///HISTORIA
 
     cout<<"------------------------------------------------------------------"<<endl;
+    ///Se procede a mostrar los nombres de los integrantes del grupo
     cout<<"Integrantes"<<endl;
     cout<<"Ricardo Aliste"<<endl;
     cout<<"Daniel Cajas"<<endl;
