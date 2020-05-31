@@ -6,7 +6,7 @@
 
 using namespace std;
 
-int mid(int matriz[3][5])
+int mid(int matriz[3][5]) ///Funcion para encontrar el punto donde se encuentra la mitad de los datos (dato para calcular mediana)
 {
     int n=5015752/2, numero=0;
     for(int i=0; i<5; i++)
@@ -20,7 +20,7 @@ int mid(int matriz[3][5])
 
 }
 
-int mayor(int matriz[3][5])
+int mayor(int matriz[3][5]) ///Funcion que retorna la posicion de la tabla de datos donde se encuentran la mayor cantidad de datos
 {
     int nposicion=0;
     for(int i=0; i<5; i++)
@@ -33,63 +33,63 @@ int mayor(int matriz[3][5])
     return nposicion;
 }
 
-void preparar(int matriz[3][5])
+void preparar(int matriz[3][5]) ///Funcion para inicializar la tabla de datos
 {
     int n=450;
     for(int i=0; i<5; i++)
     {
-        matriz[0][i]=n;
-        matriz[1][i]=n+59;
-        matriz[2][i]=0;
+        matriz[0][i]=n;    ///Limite Inferior
+        matriz[1][i]=n+59; ///Limite superiro
+        matriz[2][i]=0;    ///Cantidad de datos en el intervalo
         n+=60;
     }
 }
 
-void posicionar(int matriz[3][5], int numero)
+void posicionar(int matriz[3][5], int numero) ///Funcion para almacenar datos segun su posicion en la tabla
 {
-    if(matriz[1][0]>=numero && numero>=matriz[0][0])
+    if(matriz[1][0]>=numero && numero>=matriz[0][0]) ///Rango 1: 450-509
     {
-        matriz[2][0]=matriz[2][0]+1;
+        matriz[2][0]=matriz[2][0]+1; ///Se almacena los datos (forma se repite en los demas rangos)
     }
-    if(matriz[1][1]>=numero && numero>=matriz[0][1])
+    if(matriz[1][1]>=numero && numero>=matriz[0][1]) ///Rango 2: 510-569
     {
         matriz[2][1]=matriz[2][1]+1;
     }
-    if(matriz[1][2]>=numero && numero>=matriz[0][2])
+    if(matriz[1][2]>=numero && numero>=matriz[0][2]) ///Rango 3: 570-629
     {
         matriz[2][2]=matriz[2][2]+1;
     }
-    if(matriz[1][3]>=numero && numero>=matriz[0][3])
+    if(matriz[1][3]>=numero && numero>=matriz[0][3]) ///Rango 4: 630-689
     {
         matriz[2][3]=matriz[2][3]+1;
     }
-    if(750>=numero && numero>=matriz[0][4])
+    if(750>=numero && numero>=matriz[0][4])          ///Rango 5: 690-750
     {
         matriz[2][4]=matriz[2][4]+1;
     }
 }
 
-int promedio(int matriz[3][5])
+int promedio(int matriz[3][5]) ///Funcion que retorna el promedio de una de las tablas de datos
 {
-    unsigned long long sumatoria=0;
-    int x, f;
+    unsigned long long sumatoria=0; ///Variable donde se iran sumando los datos
+    int x, f; //Varaibles a utilizar segun formula
     for(int i=0; i<5; i++)
     {
-        x=matriz[0][i]+30;
-        f=matriz[2][i];
-        sumatoria+=((x*f));
+        x=matriz[0][i]+30;  ///marca de clases (el punto medio entre limite inferior y superiror)
+        f=matriz[2][i];     ///Cantidad total de elementos dentro del rango de datos
+        sumatoria+=((x*f)); ///Se realiza una sumatoria del valor resultante de X*f
     }
-    return (sumatoria/5015752);
+    return (sumatoria/5015752); ///Se retorna finalmente el valor total de la sumatoria, dividido por el numero de elementos
 }
 
-int moda(int matriz[3][5])
+int moda(int matriz[3][5]) ///Funcion para calcular la moda de una tabla de datos
 {
-    int posicion=mayor(matriz);
-    int A=60, numero_resultante=0;
-    int f0,f1,f2,L;
-    if(posicion==0)
+    int posicion=mayor(matriz);    ///Se obtiene la posicion donde se encuentra la mayoria de los datos
+    int A=60, numero_resultante=0; ///A es la amplitud del intervalo, el cual es 60
+    int f0,f1,f2,L;  ///Variables a utilizar para calcular la moda
+    if(posicion==0) ///Para el intervalo 1
     {
-        f0=0;
+        f0=0;            ///Cantidad de datos en la posicion
         f1=matriz[2][0];
         f2=matriz[2][1];
         L=matriz[0][0];
@@ -97,7 +97,7 @@ int moda(int matriz[3][5])
         numero_resultante=numero_resultante+L;
         return numero_resultante;
     }
-    if(posicion==1)
+    if(posicion==1) ///Para el intervalo 2
     {
         f0=matriz[2][0];
         f1=matriz[2][1];
@@ -107,7 +107,7 @@ int moda(int matriz[3][5])
         numero_resultante=numero_resultante+L;
         return numero_resultante;
     }
-    if(posicion==2)
+    if(posicion==2) ///Para el intervalo 3
     {
         f0=matriz[2][1];
         f1=matriz[2][2];
@@ -117,7 +117,7 @@ int moda(int matriz[3][5])
         numero_resultante=numero_resultante+L;
         return numero_resultante;
     }
-    if(posicion==3)
+    if(posicion==3) ///Para el intervalo 4
     {
         f0=matriz[2][2];
         f1=matriz[2][3];
@@ -127,7 +127,7 @@ int moda(int matriz[3][5])
         numero_resultante=numero_resultante+L;
         return numero_resultante;
     }
-    if(posicion==4)
+    if(posicion==4) ///Para el intervalo 5
     {
         f0=matriz[2][3];
         f1=matriz[2][4];
@@ -144,7 +144,7 @@ int mediana(int matriz[3][5])
     int posicion=mid(matriz);
     int A=60, numero_resultante=0, n=5015752/2;
     int F,f,L;
-    if(posicion==0)
+    if(posicion==0) ///Para el intervalo 1
     {
         F=0;
         f=matriz[2][0];
@@ -153,7 +153,7 @@ int mediana(int matriz[3][5])
         numero_resultante=numero_resultante+L;
         return numero_resultante;
     }
-    if(posicion==1)
+    if(posicion==1) ///Para el intervalo 2
     {
         F=matriz[2][0];
         f=matriz[2][1];
@@ -162,7 +162,7 @@ int mediana(int matriz[3][5])
         numero_resultante=numero_resultante+L;
         return numero_resultante;
     }
-    if(posicion==2)
+    if(posicion==2) ///Para el intervalo 3
     {
         F=matriz[2][1]+matriz[2][0];
         f=matriz[2][2];
@@ -171,7 +171,7 @@ int mediana(int matriz[3][5])
         numero_resultante=numero_resultante+L;
         return numero_resultante;
     }
-    if(posicion==3)
+    if(posicion==3) ///Para el intervalo 4
     {
         F=matriz[2][2]+matriz[2][1]+matriz[2][0];
         f=matriz[2][3];
@@ -180,7 +180,7 @@ int mediana(int matriz[3][5])
         numero_resultante=numero_resultante+L;
         return numero_resultante;
     }
-    if(posicion==4)
+    if(posicion==4) ///Para el intervalo 5
     {
         F=matriz[2][3]+matriz[2][2]+matriz[2][1]+matriz[2][0];;
         f=matriz[2][4];
