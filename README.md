@@ -19,6 +19,8 @@ los algoritmos deben ser en:
 *Dentro del repositorio se encuentra el PDF del taller, en el cual se profundiza mas todo esto*
 
 # Integrantes
-Ricardo Aliste G.
+Ricardo Aliste
+
 Daniel Cajas
+
 Rodrigo Carmona
