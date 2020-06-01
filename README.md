@@ -7,6 +7,7 @@ El taller consta del desarrollo de 4 algoritmos, los cuales leen un archivo .csv
 el trabajo de cada algoritmo es el de calcular el promedio, moda, mediana y desviacion estandar para cada uno de esos elementos.
 
 los algoritmos deben ser en:
+
 -C/C++ SECUENCIAL
 
 -DART SECUENCIAL
