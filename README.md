@@ -8,8 +8,11 @@ el trabajo de cada algoritmo es el de calcular el promedio, moda, mediana y desv
 
 los algoritmos deben ser en:
 -C/C++ SECUENCIAL
+
 -DART SECUENCIAL
+
 -C/C++ OpenMP
+
 -C/C++ OpenMPI
 
 *Dentro del repositorio se encuentra el PDF del taller, en el cual se profundiza mas todo esto*
