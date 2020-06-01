@@ -231,6 +231,7 @@ int main(int argc, char *argv[])
     if(procesadores < 2)
     {
         cout<<"La implementación requiere al menos 2 procesadores"<<std::endl;
+        return EXIT_SUCCESS;
     }    
     std::string rut,nem,ranking,matematicas,lenguaje,ciencias,historia; ///Variable tipo string; son utilizadas para guardar datos
     int nemn,rankingn,matematicasn,lenguajen,cienciasn,historian; ///Variables tipo int; son para almacenar los datos unas vez pasados a entero
