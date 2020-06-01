@@ -217,22 +217,18 @@ void mostrar(int promedio, int moda, int mediana, int desviacion_estandar, strin
 
 int main(int argc, char *argv[])
 {
-    int mi_rango;
-    int procesadores;
-    int maestro = 0;
-    int tag =0;
-    
-    std::string parar("STOP");
+    int mi_rango; /* rango del proceso    */
+    int p; /* numero de procesos   */
+    int fuente; /* rango del que envia  */
+    int dest; /* rango del que recibe */
+    int tag = 0; /* etiqueta del mensaje */
+    char mensaje[100];
 
+    MPI_Status estado;
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &mi_rango);
-    MPI_Comm_size(MPI_COMM_WORLD, &procesadores);
-    
-    if(procesadores < 2)
-    {
-        cout<<"La implementación requiere al menos 2 procesadores"<<std::endl;
-        return EXIT_SUCCESS;
-    }    
+    MPI_Comm_size(MPI_COMM_WORLD, &p);
+
     std::string rut,nem,ranking,matematicas,lenguaje,ciencias,historia; ///Variable tipo string; son utilizadas para guardar datos
     int nemn,rankingn,matematicasn,lenguajen,cienciasn,historian; ///Variables tipo int; son para almacenar los datos unas vez pasados a entero
     int pnem=0,pranking=0, pmatematicas=0, plenguaje=0, pciencias=0, phistoria=0, i=1;  //Variables para almacenar los promedios
@@ -299,58 +295,46 @@ int main(int argc, char *argv[])
         posicionar(dhistoria, historian);
 
     }
-
-    //Se realiza el calculo de los promedios
-    pnem=promedio(dnem);
-    pranking=promedio(dranking);
-    plenguaje=promedio(dlenguaje);
-    pmatematicas=promedio(dmatematicas);
-    pciencias=promedio(dciencias);
-    phistoria=promedio(dhistoria);
-
-    ///Se realiza el calculo de los datos de cada columna (se realiza en cada ocasion en el mismo orden)
-    ///Nem
-    monem=moda(dnem);              ///Moda
-    desnem=desviacion(dnem, pnem); ///Desv. Estandar
-    mnem=mediana(dnem);            ///Mediana
-
-    ///Ranking
-    moranking=moda(dranking);
-    desranking=desviacion(dranking, pranking);
-    mranking=mediana(dranking);
-
-    ///Lenguaje
-    molenguaje=moda(dlenguaje);
-    deslenguaje=desviacion(dlenguaje, plenguaje);
-    mlenguaje=mediana(dlenguaje);
-
-    ///Matemaicas
-    momatematicas=moda(dmatematicas);
-    desmatematicas=desviacion(dmatematicas, pmatematicas);
-    mmatematicas=mediana(dmatematicas);
-
-    ///Ciencias
-    mociencias=moda(dciencias);
-    desciencias=desviacion(dciencias, pciencias);
-    mciencias=mediana(dciencias);
-
-    ///Historia
-    mohistoria=moda(dhistoria);
-    deshistoria=desviacion(dhistoria, phistoria);
-    mhistoria=mediana(dhistoria);
-
-    ///Se procede a mostrar la informacion de cada columna
-    mostrar(pnem,monem,mnem,desnem,"NEM");                                         ///NEM
-    mostrar(pranking,moranking,mranking,desranking,"RANKING");                     ///RANKING
-    mostrar(plenguaje,molenguaje,mlenguaje,deslenguaje,"LENGUAJE");                ///LENGUAJE
-    mostrar(pmatematicas,momatematicas,mmatematicas,desmatematicas,"MATEMATICAS"); ///MATEMATICAS
-    mostrar(pciencias,mociencias,mciencias,desciencias,"CIENCIAS");                ///CIENCIAS
-    mostrar(phistoria,mohistoria,mhistoria,deshistoria,"HISTORIA");                ///HISTORIA
-
+    int numero=0
+    if (mi_rango != 0) {
+        if(numero=0)
+        {
+            string datos="Promedio:"+to_string(promedio(dnem))+"\nModa:"+to_string(moda(dnem))+"\Mediana:"+to_string(mediana(dnem))+"\Desv. Estandar:"+to_string(desviacion(dnem, promedio(dnem)))+"\n";
+        }
+        if(numero=1)
+        {
+            string datos="Promedio:"+to_string(promedio(dranking))+"\nModa:"+to_string(moda(dranking))+"\Mediana:"+to_string(mediana(dranking))+"\Desv. Estandar:"+to_string(desviacion(dranking, promedio(dranking)))+"\n";
+        }
+        if(numero=2)
+        {
+            string datos="Promedio:"+to_string(promedio(dlenguaje))+"\nModa:"+to_string(moda(dlenguaje))+"\Mediana:"+to_string(mediana(dlenguaje))+"\Desv. Estandar:"+to_string(desviacion(dlenguaje, promedio(dlenguaje)))+"\n";
+        }
+        if(numero=3)
+        {
+            string datos="Promedio:"+to_string(promedio(dmatematicas))+"\nModa:"+to_string(moda(dmatematicas))+"\Mediana:"+to_string(mediana(dmatematicas))+"\Desv. Estandar:"+to_string(desviacion(dmatematicas, promedio(dmatematicas)))+"\n";
+        }
+        if(numero=4)
+        {
+            string datos="Promedio:"+to_string(promedio(dciencias))+"\nModa:"+to_string(moda(dciencias))+"\Mediana:"+to_string(mediana(dciencias))+"\Desv. Estandar:"+to_string(desviacion(dciencias, promedio(dciencias)))+"\n";
+        }
+        if(numero=5)
+        {
+            string datos="Promedio:"+to_string(promedio(dhistoria))+"\nModa:"+to_string(moda(dhistoria))+"\Mediana:"+to_string(mediana(dhistoria))+"\Desv. Estandar:"+to_string(desviacion(dhistoria, promedio(dhistoria)))+"\n";
+        }
+        MPI_Send(mensaje, strlen(mensaje) + 1, MPI_CHAR,dest, tag, MPI_COMM_WORLD);
+    }
+    else { /* mi_rango == 0 */
+        for (fuente = 1; fuente < p; fuente++) {
+            MPI_Recv(mensaje, 100, MPI_CHAR, fuente,tag, MPI_COMM_WORLD, &estado);
+            printf("%s\n", mensaje);
+        }
+    }
+    MPI_Finalize();
     cout<<"------------------------------------------------------------------"<<endl;
     ///Se procede a mostrar los nombres de los integrantes del grupo
     cout<<"Integrantes"<<endl;
     cout<<"Ricardo Aliste"<<endl;
     cout<<"Daniel Cajas"<<endl;
     cout<<"Rodrigo Carmona"<<endl;
+    return EXIT_SUCCESS;
 }
