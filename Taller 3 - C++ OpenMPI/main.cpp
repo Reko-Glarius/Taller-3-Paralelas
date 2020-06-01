@@ -221,11 +221,17 @@ int main(int argc, char *argv[])
     int procesadores;
     int maestro = 0;
     int tag =0;
+    
+    std::string parar("STOP");
 
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &mi_rango);
-    MPI_Comm_size(MPI_COMM_WORLD, &p);
-
+    MPI_Comm_size(MPI_COMM_WORLD, &procesadores);
+    
+    if(procesadores < 2)
+    {
+        cout<<"La implementación requiere al menos 2 procesadores"<<std::endl;
+    }    
     std::string rut,nem,ranking,matematicas,lenguaje,ciencias,historia; ///Variable tipo string; son utilizadas para guardar datos
     int nemn,rankingn,matematicasn,lenguajen,cienciasn,historian; ///Variables tipo int; son para almacenar los datos unas vez pasados a entero
     int pnem=0,pranking=0, pmatematicas=0, plenguaje=0, pciencias=0, phistoria=0, i=1;  //Variables para almacenar los promedios
