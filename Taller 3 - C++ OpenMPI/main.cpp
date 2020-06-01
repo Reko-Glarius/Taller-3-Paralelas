@@ -295,7 +295,7 @@ int main(int argc, char *argv[])
         posicionar(dhistoria, historian);
 
     }
-    int numero=0
+    int numero=0;
     if (mi_rango != 0) {
         if(numero=0)
         {
