@@ -75,35 +75,37 @@ void mostrarResultados(double promedio, int moda, double mediana, double DesvEst
 
 int main(int argc, char **argv)
 {
-    if (argc == 1)
+    if (argc == 1) //Se verifica si la cantidad de argumentos del programa es igual a 1, en cuyo caso no se ha recibido una dirección del archivo.
     {
         cout << "No se ha entregado la dirección del archivo. Se cerrará el programa." << std::endl;
         return EXIT_FAILURE;
     }
     if (argc > 1)
     {
-        std::string ruta(argv[1]);
-        std::ifstream entrada(ruta);
-        if (!entrada.good())
+        std::string ruta(argv[1]); //Se guarda la dirección del archivo en un string.
+        std::ifstream entrada(ruta); //Se abre el archivo desde la ruta dada.
+        if (!entrada.good()) //Se verifica que el archivo ha sido abierto correctamente.
         {
             cout << "Dirección de archivo incorrecta. Se cerrará el programa" << std::endl;
             return EXIT_FAILURE;
         }
+        //Inicialización de vectores de datos.
         std::vector<int> dnem;
         std::vector<int> dranking;
         std::vector<int> dmatematicas;
         std::vector<int> dlenguaje;
         std::vector<int> dciencias;
         std::vector<int> dhistoria;
-        if (entrada)
+        if (entrada) //Se verifica que el archivo no esté vacio. 
         { 
             {
-                for (std::string linea; getline(entrada, linea);)
+                for (std::string linea; getline(entrada, linea);) //Se recorre cada linea del archivo.
                 {
                     {
-                        vector<int> puntajes = obtenerPuntajes(linea);
+                        vector<int> puntajes = obtenerPuntajes(linea); //Los valores de cada linea se guardan en un vector de enteros.
                         if (puntajes.size() >= 6)
                         {
+                            //El valor de cada columna se guarda en un vector correspondiente.
                             dnem.push_back(puntajes.at(1));
                             dranking.push_back(puntajes.at(2));
                             dmatematicas.push_back(puntajes.at(3));
@@ -111,20 +113,25 @@ int main(int argc, char **argv)
                             dciencias.push_back(puntajes.at(5));
                             dhistoria.push_back(puntajes.at(6));
                         }
-                        puntajes.clear();
+                        puntajes.clear(); //Se borra el vector puntajes luego de que termine su función.
                     }
                 }
             }
         }
-#pragma omp parallel
+#pragma omp parallel //Indica al programa que esta sección se trabajará en paralelo
         {
-#pragma omp single
+#pragma omp single //Una cpu inicializará las tareas, las demás las realizarán.
             {
+//Se realizan tareas para cada uno de los vectores que guardan los valores del archivo origen.
 #pragma omp task
                 {
+                    //Se usa la función sort para ordenar cada vector. Esto permite utilizar funciones sobre éstos de manera eficiente.
                     std::sort(dnem.begin(), dnem.end());
+                    //Los promedios de cada vector se guardan en una variable de tipo double para ser utilizados en el cálculo de la desviación estandar.
                     double pnem = encontrarPromedio(dnem, limite);
+                    //Se muestran los resultados dados según los datos obtenidos.
                     mostrarResultados(pnem, encontrarModa(dnem, limite), encontrarMediana(dnem, limite), calcularDesvEstandar(pnem, dnem, limite), "nem");
+                    //Se borra el vector cuando no se necesite más.
                     dnem.clear();
                 }
 #pragma omp task
@@ -166,14 +173,15 @@ int main(int argc, char **argv)
             }
         }
     }
-    else
+    else  //No existen argumentos que procesar, por lo que se llega al fin esperado del programa.
     {
+        //Muestra los integrantes del grupo de trabajo.
         mostrarParticipantes();
     }
     return EXIT_SUCCESS;
 }
 
-void mostrarParticipantes()
+void mostrarParticipantes() //Imprime los integrantes del grupo de trabajo por pantalla
 {
     std::cout << std::endl
               << "===Tarea===" << std::endl;
@@ -187,7 +195,7 @@ void mostrarParticipantes()
 
 double encontrarMediana(std::vector<int> arreglo, int size)
 {
-    if (size % 2 != 0)
+    if (size % 2 != 0) //Verifica si el numero de datos es impar o no para determinar que fórmula usar.
     {
         return (double)arreglo.at(size / 2);
     }
@@ -196,46 +204,49 @@ double encontrarMediana(std::vector<int> arreglo, int size)
 
 double encontrarPromedio(std::vector<int> arreglo, int size)
 {
-    long suma = 0;
-    for (int i = 0; i < size; i++)
+    long suma = 0; //La variable 'suma' debe ser de tipo long para acaparar la cantidad de datos del archivo puntajes.csv
+    for (int i = 0; i < size; i++) //Se recorre el vector.
     {
-        suma += arreglo.at(i);
+        suma += arreglo.at(i); //Se suma cada dato del vector.
     }
-    return (double)(suma / (double)size);
+    return (double)(suma / (double)size); //Se divide el total por la cantidad de datos, obteniendo el promedio.
+    //El uso del casteo (doble) es para que el valor retornado tenga mayor precisión en los decimales.
 }
 
 int encontrarModa(std::vector<int> arreglo, int size)
 {
-    std::unordered_map<int, int> hash;
-    for (int i = 0; i < size; i++)
+    std::unordered_map<int, int> hash; //Se inicializa un hash table.
+    for (int i = 0; i < size; i++) //Se recorre el vector.
     {
-        hash[arreglo.at(i)]++;
+        hash[arreglo.at(i)]++; //Se agrega cada dato del vector al hash table.
     }
-    int max = 0, moda = arreglo.at(0);
-    for (auto i : hash)
+    int max = 0, moda = arreglo.at(0); 
+    //Se inicializa una variable para guardar la cantidad máxima de valores coincidentes y otra para guardar el valor que coincide la mayor cantidad de veces.
+    for (auto i : hash) //Se recorre cada rama del hash, con divisiones first (izquierda) y second (derecha).
     {
-        if (max < i.second)
+        if (max < i.second) //Si coinciden más valores para una rama determinada.
         {
-            moda = i.first;
-            max = i.second;
+            moda = i.first; //Se guarda el valor en la variable 'moda'.
+            max = i.second; //Se guarda el número de coincidencias en la variable 'max'.
         }
     }
-    return moda;
+    return moda; //Se retorna el valor que coincide más veces en el vector entregado.
 }
 
 double calcularDesvEstandar(double promedio, std::vector<int> arreglo, int size)
 {
-    double varianza;
-    for (int i = 0; i < size; i++)
+    double varianza; //Esta variable guarda la variable y se utiliza para el cálculo siguiente.
+    for (int i = 0; i < size; i++) //Se recorre el arreglo
     {
-        varianza += (arreglo.at(i) - promedio) * (arreglo.at(i) - promedio);
+        varianza += (arreglo.at(i) - promedio) * (arreglo.at(i) - promedio); //Se suma cada cuadrado de diferencia entre cada dato y el promedio del vector.
     }
-    varianza = varianza / (double)size;
-    return sqrt(varianza);
+    varianza = varianza / (double)size; //Se obtiene la varianza dividiendo la suma obtenida por el número de datos.
+    return sqrt(varianza); //Se retorna la raíz cuadrada de la varianza.
 }
 
 void mostrarResultados(double promedio, int moda, double mediana, double desvEstandar, std::string nombre)
 {
+    //Se imprimen los valores correspondientes por pantalla.
     cout << "===========================================" << std::endl;
     cout << "Nombre de dato: " << nombre << std::endl;
     cout << "Promedio: " << promedio << std::endl;
